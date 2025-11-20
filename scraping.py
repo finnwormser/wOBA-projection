@@ -84,7 +84,7 @@ for player_tag in tqdm(unique_tags):
 
     	rookie_seasons[player_tag[11:-6]] = int(rookie_season)
     	rookie_robas[player_tag[11:-6]] = float(advanced_batting.loc[advanced_batting['Season']==rookie_season, 'rOBA'].iloc[0])
-    	minors_tags[player_tag[11:-6]] = soup.find('a', string=re.compile(r'.*Minor.*Lg Stats'))['href']
+    	minors_tags[player_tag[11:-6]] = soup.find('a', string=re.compile(r'.*Minor.*Stats'))['href']
 
     except:
         print(f'Error occurred for player {player_tag[11:-6]}')
@@ -94,7 +94,7 @@ for player_tag in tqdm(unique_tags):
 minors_stats = {}
 
 print('Scraping Minors Data')
-for player_id in tqdm(list(rookie_seasons.keys())):
+for player_id in tqdm(list(minors_tags.keys())):
 
     minors_tag = minors_tags[player_id]
     minors_url = f"https://www.baseball-reference.com{minors_tag}"
@@ -137,4 +137,4 @@ for player, data in minors_stats.items():
         
     master_data = pd.concat([master_data, data])
     
-master_data.to_csv('ds4420_minors_stats.csv')
+master_data.to_csv('ds4420_minors_stats.csv', index=False)
