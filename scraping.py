@@ -59,6 +59,7 @@ unique_tags = list(set(batter_tags))
 
 rookie_seasons = {}
 rookie_robas = {}
+rookie_PAs = {}
 minors_tags = {}
 
 print('Scraping Minors Pages')
@@ -75,16 +76,19 @@ for player_tag in tqdm(unique_tags):
         print(f"Failed to retrieve the page. Status code: {response.status_code}")
 
     try:
-    	rookie_season = soup.find(string=re.compile(r'Exceeded rookie limits during', re.I)).strip().split()[4]
-    
-    	tables = pd.read_html(StringIO(str(soup)))
-
-    	advanced_batting = tables[[table['id'] for table in soup.find_all('table')].index('players_advanced_batting')].copy()
-    	advanced_batting.columns = [col[1] for col in advanced_batting.columns]
-
-    	rookie_seasons[player_tag[11:-6]] = int(rookie_season)
-    	rookie_robas[player_tag[11:-6]] = float(advanced_batting.loc[advanced_batting['Season']==rookie_season, 'rOBA'].iloc[0])
-    	minors_tags[player_tag[11:-6]] = soup.find('a', string=re.compile(r'.*Minor.*Stats'))['href']
+        rookie_season = soup.find(string=re.compile(r'Exceeded rookie limits during', re.I)).strip().split()[4]
+        
+        tables = pd.read_html(StringIO(str(soup)))
+        
+        advanced_batting = tables[[table['id'] for table in soup.find_all('table')].index('players_advanced_batting')].copy()
+        
+        advanced_batting.columns = [col[1] for col in advanced_batting.columns]
+        
+        if int(advanced_batting.loc[advanced_batting['Season']==rookie_season, 'PA'].iloc[0]) >= 130:
+            rookie_seasons[player_tag[11:-6]] = int(rookie_season)
+            rookie_robas[player_tag[11:-6]] = float(advanced_batting.loc[advanced_batting['Season']==rookie_season, 'rOBA'].iloc[0])
+            rookie_PAs[player_tag[11:-6]] = int(advanced_batting.loc[advanced_batting['Season']==rookie_season, 'PA'].iloc[0])
+            minors_tags[player_tag[11:-6]] = soup.find('a', string=re.compile(r'.*Minor.*Stats'))['href']
 
     except:
         print(f'Error occurred for player {player_tag[11:-6]}')
@@ -108,20 +112,18 @@ for player_id in tqdm(list(minors_tags.keys())):
         print(f"Failed to retrieve the page. Status code: {response.status_code}")
 
     try:
-
-    	tables = pd.read_html(StringIO(str(soup)))
-
-    	if 'standard_batting' in [table['id'] for table in soup.find_all('table')]:
+        tables = pd.read_html(StringIO(str(soup)))
+        if 'standard_batting' in [table['id'] for table in soup.find_all('table')]:
             standard_batting_minors = tables[[table['id'] for table in soup.find_all('table')].index('standard_batting')]
             standard_batting_minors['Year'] = pd.to_numeric(standard_batting_minors['Year'], errors='coerce').astype('Int64')
             pre_rookie_batting = standard_batting_minors.loc[standard_batting_minors['Year'] < rookie_seasons[player_id]]
             pre_rookie_batting = pre_rookie_batting.loc[(~pre_rookie_batting['Tm'].astype(str).str.contains('Teams')) & 
                                                 (pre_rookie_batting['Lev'] != 'Maj')]
-
-    	else:
+            
+        else:
             pre_rookie_batting = pd.DataFrame()
-
-    	minors_stats[player_id] = pre_rookie_batting
+            
+        minors_stats[player_id] = pre_rookie_batting
 
     except:
         print(f'Error occurred for player {player_id}')
@@ -134,6 +136,7 @@ for player, data in minors_stats.items():
         data['PlayerID'] = player
         data['Rookie_Season'] = rookie_seasons[player]
         data['Rookie_rOBA'] = rookie_robas[player]
+        data['Rookie_PA'] = rookie_PAs[player]
         
     master_data = pd.concat([master_data, data])
     
