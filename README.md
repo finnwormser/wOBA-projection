@@ -7,10 +7,10 @@ This project aims to predict rOBA values for MLB hitters in their rookie season,
 ## Data Processing
 To handle different quantities of data for each player, we computed a weighted average of a players' minor league seasons where each previous season was weighted half as much as the following, until the player reached the MLB level. We then converted all counting statistics to a rate basis, and recomputed them based on time played.
 
-## Bayesian Regression
+## Bayesian Regression (bayesian_demo.R)
 After testing out different hyperparameters, our final Bayesian model used the default prior and a Gaussian likelihood for rOBA. We trained 4 chains of 2500 iterations each, with 450 discarded as burn-in.
 
-## MLP
+## MLP (MLP.ipynb)
 Our final MLP used a single hidden layer of 7 nodes, activated via the ReLU function. We trained this model for 10,000 epochs at a learning rate of η = 0.01.
 
 ## Results and Conclusion
