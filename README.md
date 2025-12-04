@@ -2,7 +2,7 @@
 
 ## Introduction
 
-This project aims to predict rOBA values for MLB hitters in their rookie season, based on their minor-league statistics. rOBA is a composite statistic which tries to distill a hitter's value into a single metric. Based on our literature review, we followed two methods: a Bayesian regression model implemented in R through the **brms** package, and an MLP implemented manually in Python. The dataset we used was collected from **baseball-reference.com**  using the scraping code in `scraping.py`. 
+This project aims to predict rOBA values for MLB hitters in their rookie season, based on their minor-league statistics. rOBA is a composite statistic which tries to distill a hitter's value into a single metric. Based on our literature review, we followed two methods: a Bayesian regression model implemented in R through the **brms** package, and an MLP implemented manually in Python. The dataset we used was collected from **[baseball-reference.com]**  using the scraping code in `scraping.py`. 
 
 ## Data Processing
 To handle different quantities of data for each player, we computed a weighted average of a players' minor league seasons where each previous season was weighted half as much as the following, until the player reached the MLB level. We then converted all counting statistics to a rate basis, and recomputed them based on time played.
