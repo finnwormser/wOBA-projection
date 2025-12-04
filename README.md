@@ -17,4 +17,5 @@ Our final MLP used a single hidden layer of 7 nodes, activated via the ReLU func
 The Bayesian model produced far more conservative predictions than the MLP, typically predicting very close to the mean. Thanks to this, it significantly outperformed the MLP, which was especially notable in some outlier cases. However, neither model was effective, both scoring worse than the naive baseline for this problem. This suggests that the models failed to capture some relationship, either due to lack of data or the simplifications we made when computing weighted averages.
 
 Bayesian regression: **RMSE**: .038, **$R^2$**: .148
+
 MLP: **RMSE**: .1065, **$R^2$**: .-5.51
