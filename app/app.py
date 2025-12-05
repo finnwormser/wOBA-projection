@@ -7,7 +7,7 @@ st.set_page_config(page_title="Rookie rOBA App", layout="wide")
 
 @st.cache_data
 def load():
-    df = pd.read_csv("test_results.csv")
+    df = pd.read_csv("app/test_results.csv")
     df["residual"] = df["Rookie_rOBA_pred"] - df["Rookie_rOBA"]
     return df
 
