@@ -13,6 +13,9 @@ After testing out different hyperparameters, our final Bayesian model used the d
 ## MLP (MLP.ipynb)
 Our final MLP used a single hidden layer of 7 nodes, activated via the ReLU function. We trained this model for 10,000 epochs at a learning rate of η = 0.01.
 
+## App
+We deployed an app with a project description and interactive visualization of our Bayesian model's predictions on our test set. It can be found here: https://woba-projectiongit-lgvfgzrgilspfpx4bob8bu.streamlit.app/
+
 ## Results and Conclusion
 The Bayesian model produced far more conservative predictions than the MLP, typically predicting very close to the mean. Thanks to this, it significantly outperformed the MLP, which was especially notable in some outlier cases. However, neither model was effective, both scoring worse than the naive baseline for this problem. This suggests that the models failed to capture some relationship, either due to lack of data or the simplifications we made when computing weighted averages.
 
